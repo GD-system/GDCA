@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>기뚱 계산기</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .input-row input,
+    .input-row select {
+      flex: 1;
+      padding: 10px;
+      font-size: 1.1em;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.1em;
+      margin-bottom: 15px;
+    }
+
+    #result {
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.4em;
+      font-weight: bold;
+      margin: 30px 0 10px;
+    }
+
+    .card {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .card-info {
+      flex: 1;
+    }
+
+    .card-info div {
+      margin: 3px 0;
+    }
+  </style>
+</head>
+<body>
+  <h2>⚖️ 기뚱 계산기</h2>
+
+  <div class="input-row">
+    <input type="number" id="weight" placeholder="숫자 입력" inputmode="decimal">
+    <select id="unit">
+      <option value="kg">kg</option>
+      <option value="g">g</option>
+      <option value="t">t</option>
+      <option value="oz">oz</option>
+    </select>
+  </div>
+
+  <button onclick="convertToGD()">변환하기</button>
+  <div id="result"></div>
+
+  <div class="section-title">🌍 세계 속의 기뚱</div>
+  <div id="gdGallery"></div>
+
+  <script>
+    const gdBaseKg = 151.8;
+
+    function convertToGD() {
+      const weightInput = document.getElementById('weight').value.trim();
+      const unit = document.getElementById('unit').value;
+
+      if (weightInput === "") {
+        document.getElementById('result').innerText = "숫자를 입력해주세요.";
+        return;
+      }
+
+      const weight = parseFloat(weightInput);
+      if (isNaN(weight) || weight <= 0) {
+        document.getElementById('result').innerText = "유효한 숫자를 입력해주세요.";
+        return;
+      }
+
+      let weightInKg = 0;
+      switch (unit) {
+        case 'kg': weightInKg = weight; break;
+        case 'g':  weightInKg = weight / 1000; break;
+        case 't':  weightInKg = weight * 1000; break;
+        case 'oz': weightInKg = weight * 0.0283495; break;
+      }
+
+      const gdValue = weightInKg / gdBaseKg;
+      const resultText = gdValue >= 1000
+        ? `${(gdValue / 1000).toFixed(3)} kGD`
+        : `${gdValue.toFixed(3)} GD`;
+
+      document.getElementById('result').innerText = `${resultText}`;
+    }
+
+    // 세계의 기뚱 목록
+    const items = [
+      {
+        name: "🇲🇾 바투 동상",
+        weightKg: 4070000,
+        img: "https://i.namu.wiki/i/54uPy3UGbANLaLx03w2zYvBBns5SLXr34PJjcvQ6qUz1uKcYyX_iF2s-w-lB2n-YOCtc1aYoRKcy-VIIbT-dQw.webp"
+      },
+      {
+        name: "🇯🇵 토다이지 대불",
+        weightKg: 500000,
+        img: "https://article.bespes-jt.com/hs-fs/hubfs/%E5%BC%81%E5%A4%A9%E5%A0%82%20(63)-2.jpg?width=533&height=300&name=%E5%BC%81%E5%A4%A9%E5%A0%82%20(63)-2.jpg"
+      },
+      {
+        name: "🇯🇵 이츠쿠시마 신사 토리이",
+        weightKg: 60000,
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOPNcVS_U1a2_uv6zIZymGiV7MQJQkQnTEtQ&s"
+      },
+      {
+        name: "🇰🇷 세종대왕 동상",
+        weightKg: 20000,
+        img: "https://gwanghwamun.seoul.go.kr/ghm/file/down.do?fkey=e20bd49f9d09a15cee72064e856f2c04edadafad570117d1167ac134e7711b6f1fa60f28ef68f6356add08a262ba1427095454aef1dbdedad28c230c6d836ba6"
+      },
+      {
+        name: "🇰🇷 국민대 MR.Doctor",
+        weightKg: 3136,
+        img: "https://cdn.press.kookmin.ac.kr/news/photo/202003/101351_101079_2348.jpg"
+      },
+      {
+        name: "🇧🇷 구세주 그리스도상",
+        weightKg: 1145000,
+        img: "https://i.namu.wiki/i/7q-dT5B8Jg_lt7pjeaKZxAJAWJPfw2-WcNWNuC7XtsYzuxleDlyV7nzxF_dT8l8UNF_hOrfzs9ozk5KDmfLeOab0uPD_LyaN363tVwmtaty-UVqjctApENdofIpGcwJQaxi2nCWpw86HXXiUNkU9JQ.webp"
+      },
+      {
+        name: "🇯🇵 우시쿠 대불",
+        weightKg: 4000000,
+        img: "https://res.cloudinary.com/jnto/image/upload/w_750,h_503,fl_lossy,f_auto/v1671595448/ibaraki/Ibaraki_t_id394_2"
+      }
+    ];
+
+    function displayGDs() {
+      const container = document.getElementById('gdGallery');
+      items.forEach(item => {
+        const gdValue = item.weightKg / gdBaseKg;
+        const displayGD = gdValue >= 1000
+          ? `${(gdValue / 1000).toFixed(3)} kGD`
+          : `${gdValue.toFixed(3)} GD`;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}">
+          <div class="card-info">
+            <div><strong>${item.name}</strong></div>
+            <div>${item.weightKg.toLocaleString()} kg</div>
+            <div>= ${displayGD}</div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    displayGDs();
+  </script>
+</body>
+</html>
